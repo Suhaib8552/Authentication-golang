@@ -1,4 +1,4 @@
-<h1>Auth-Go</h1>
+<h1>Authentication using Golang & React</h1>
 
 A full-stack authentication system built with Golang (Gin), PostgreSQL, JWT Authentication, and React.
 
