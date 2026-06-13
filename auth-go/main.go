@@ -5,6 +5,7 @@ import (
 	"auth-go/migrations"
 	"auth-go/routes"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,6 +15,12 @@ func main() {
 	migrations.CreateTables()
 
 	router := gin.Default()
+
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:5173"},
+		AllowMethods: []string{"GET", "POST"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Authorization"},
+	}))
 
 	routes.RegisterRoutes(router)
 
