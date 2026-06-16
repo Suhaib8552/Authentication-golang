@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { Link, useNavigate } from "react-router-dom";
 import api_url from "../api/api";
+import { authLogin } from "../api/auth";
+import { AuthContext } from "../context/AuthContext";
 
 function Login() {
 
   const navigate=useNavigate()
+
+  const {login}=useContext(AuthContext)
 
   const [data,setData]=useState({
     email:"",
@@ -19,22 +23,16 @@ function Login() {
 
     try {
 
-      const res=await fetch(`${api_url}/login`,{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify(data)
-    })
+    const res=await authLogin(data)
 
-    const resdata=await res.json();
+    // const resdata=await res.json();
 
-    if(!res.ok){
-      console.log(resdata.error)
-      return
-    }
+    // if(!res.ok){
+    //   console.log(resdata.error)
+    //   return
+    // }
 
-    localStorage.setItem("token",resdata.token);
+    login()
 
     navigate('/profile')
       

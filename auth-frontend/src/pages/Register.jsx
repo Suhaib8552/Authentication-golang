@@ -3,6 +3,7 @@ import Input from '../components/Input'
 import Button from '../components/Button'
 import { Link, useNavigate } from 'react-router-dom'
 import api_url from '../api/api';
+import { authRegister } from '../api/auth';
 
 
 function Register() {
@@ -21,13 +22,8 @@ function Register() {
 
     try {
 
-      const res=await fetch(`${api_url}/register`,{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify(data)
-      })
+
+      const res=await authRegister(data)
 
       if(!res.ok){
         console.log(data.error);

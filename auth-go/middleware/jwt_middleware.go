@@ -5,7 +5,6 @@ import (
 	"auth-go/jwt_auth"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,20 +13,20 @@ func JwtMiddleware() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		authHeader := c.GetHeader("Authorization")
+		//authHeader := c.GetHeader("Authorization")
 
-		if authHeader == "" {
+		tokenString, err := c.Cookie("token")
+
+		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"error": "Missing Authorization Header",
+				"error": "not authenticated",
 			})
 			return
 		}
 
-		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
-
 		var count int
 
-		err := database.DB.QueryRow(
+		err = database.DB.QueryRow(
 			`
 			SELECT COUNT(*)
 			FROM token_blacklist

@@ -80,9 +80,10 @@ func HandleLogin(c *gin.Context) {
 		return
 	}
 
+	c.SetCookie("token", token, 86400, "/", "localhost", false, true)
+
 	c.JSON(http.StatusOK, gin.H{
-		"Status": "Successfully generated the token",
-		"token":  token,
+		"Status": "Login Successful",
 	})
 
 }

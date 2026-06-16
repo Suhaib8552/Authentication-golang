@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Button from '../components/Button'
 import api_url from '../api/api'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
+import { authLogout, authProfile } from '../api/auth'
+import { AuthContext } from '../context/AuthContext'
 
 function Profile() {
 
   const [profdata,setProfdata]=useState(null)
 
   const navigate=useNavigate()
+
+  const {logout}=useContext(AuthContext)
 
   useEffect(()=>{
     handleFetch()
@@ -17,13 +21,10 @@ function Profile() {
 
     try {
 
-      const token=localStorage.getItem("token")
 
-      const res=await fetch(`${api_url}/profile`,{
-        headers:{
-          Authorization:`Bearer ${token}`
-        },
-      })
+      
+
+      const res=await authProfile()
 
       const resdata=await res.json()
 
@@ -48,17 +49,11 @@ function Profile() {
 
   async function handleLogout(){
 
-    const token=localStorage.getItem("token")
+    
 
-    await fetch(`${api_url}/logout`,{
-      method:"POST",
-      headers:{
-        Authorization:`Bearer ${token}`,
-      },
-      
-    })
+    await authLogout()
 
-    localStorage.removeItem("token")
+    logout()
 
     navigate('/login')
 
@@ -72,12 +67,14 @@ function Profile() {
     <h2 style={{marginBottom:"5%"}}>Profile Page</h2>
 
     <div style={{fontSize:"18px",marginBottom:"5%"}}>
+      {profdata && (
+    <>
       <p>ID: {profdata.id}</p>
-
-    <p>Username: {profdata.username}</p>
-
-    <p>Email: {profdata.email}</p>
-    </div>
+      <p>Username: {profdata.username}</p>
+      <p>Email: {profdata.email}</p>
+    </>
+  )}
+  </div>
 
     <Button Text="Logout" onClick={handleLogout} />
 
